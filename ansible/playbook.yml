@@ -1,0 +1,92 @@
+---
+- name: "Сonfiguring the inetRouter"
+  hosts: inetRouter
+  become: yes
+  gather_facts: false
+
+  tasks:
+  - name: Add static route
+    nmcli:
+        conn_name: "System eth1"
+        ifname: eth1
+        type: ethernet
+        ip4: 192.168.0.0/16
+        gw4: 192.168.255.2
+        state: present
+    notify:
+        - restartnet
+  
+  - name: forwarding
+    sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        sysctl_set: yes
+        state: present
+        reload: yes
+
+  handlers:      
+    - name: restartnet
+      service:
+        name: network
+        state: restarted
+
+
+- name: "Сonfiguring the centralRouter"
+  hosts: centralRouter
+  become: yes
+  gather_facts: false
+
+  tasks:
+  - name: ifconfig0
+    nmcli:
+        conn_name: "System eth0"
+        type: ethernet
+        ifname: eth0
+        never_default4: yes
+        state: present
+    notify:
+        - restartnet
+
+  - name: ifconfig1
+    nmcli:
+        conn_name: "System eth1"
+        type: ethernet
+        ifname: eth1
+        gw4: 192.168.255.1
+        state: present
+    notify:
+        - restartnet
+
+  - name: forwarding
+    sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        sysctl_set: yes
+        state: present
+        reload: yes
+
+
+
+
+  handlers:      
+    - name: restartnet
+      service:
+        name: network
+        state: restarted
+
+
+
+
+# - name: "Сonfiguring the web server"
+#   hosts: web
+#   gather_facts: false
+#   roles:
+#     - nginx-role
+#   become: true
+
+# - name: "Сonfiguring the elk server"
+#   hosts: elk
+#   gather_facts: false
+#   roles:
+#     - elk-role
+#   become: true

@@ -1,0 +1,5 @@
+---
+- name: restartnet
+  systemd:
+      name: network
+      state: restarted

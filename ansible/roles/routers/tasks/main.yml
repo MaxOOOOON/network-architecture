@@ -1,0 +1,60 @@
+---
+- include_vars: main.yml
+  when: '"centralRouter" in inventory_hostname'
+
+- include_vars: office1router.yml
+  when: '"office1Router" in inventory_hostname'
+
+- include_vars: office2router.yml
+  when: '"office2Router" in inventory_hostname'
+
+# - name: Install traceroute
+#   yum: 
+#     name: traceroute
+#     state: present
+
+- name: Set sysctl params
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
+    sysctl_file: /etc/sysctl.conf
+    ignoreerrors: yes
+    reload: yes
+  with_dict: "{{ sysctl_params }}"
+
+
+- name: Disable default route for eth0
+  lineinfile:
+    path: /etc/sysconfig/network-scripts/ifcfg-eth0
+    line: DEFROUTE=no
+  notify: restartnet
+
+
+- name: Routes in file 
+  lineinfile:
+    path: /etc/sysconfig/network-scripts/{{ item.routes_file }}
+    create: yes
+    regexp: ^{{ item.network }}
+    line: '{{ item.network }} via {{ item.via }} dev {{ item.net_interface }}'
+  loop:  
+    - "{{ routes_params.centralRouter.eth2 }}"
+    - "{{ routes_params.centralRouter.eth3 }}"
+  when: 
+    - '"centralRouter" in inventory_hostname'
+
+# - name: Routes  
+#   command:
+
+
+
+- name: Add gateway
+  lineinfile:
+    path: /etc/sysconfig/network-scripts/ifcfg-{{ gateway.interface }}
+    regexp: ^GATEWAY
+    line: GATEWAY={{ gateway.ip }}
+  notify: restartnet
+
+- name: Reboot servers
+  reboot: 
+    msg: "Reboot initiated by Ansible"

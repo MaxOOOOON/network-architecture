@@ -1,0 +1,54 @@
+---
+# - name: Install traceroute
+#   yum: 
+#     name: traceroute
+#     state: present
+
+- name: Set sysctl params
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
+    sysctl_file: /etc/sysctl.conf
+    ignoreerrors: yes
+    reload: yes
+  with_dict: "{{ sysctl_params }}"
+
+
+- name: Set iptables rules
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    destination: "!192.168.0.0/16"
+    out_interface: eth0
+    jump: MASQUERADE
+  become: yes
+
+
+- name: Routes in file 
+  lineinfile:
+    path: /etc/sysconfig/network-scripts/{{ routes_params.inetrouter.routes_file }}
+    create: yes
+    regexp: ^{{ routes_params.inetrouter.network }}
+    line: '{{ routes_params.inetrouter.network }} via {{ routes_params.inetrouter.subnet }} dev {{ routes_params.inetrouter.net_interface }}'
+  notify: restartnet  
+
+
+# - name: configure static route
+#   community.general.nmcli:
+#       type: ethernet
+#       ifname: eth1
+#       conn_name: "System eth1"
+#       routing_rules4 : '192.168.0.0/16 192.168.255.2'
+#       state: present
+
+- name: iptables-save  
+  shell: 'iptables-save > /etc/sysconfig/iptables'
+
+
+- name: Reboot servers
+  reboot: 
+    msg: "Reboot initiated by Ansible"
+
+- name: iptables-restore  
+  shell: 'iptables-restore < /etc/sysconfig/iptables'

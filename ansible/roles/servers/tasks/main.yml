@@ -1,0 +1,36 @@
+---
+- include_vars: main.yml
+  when: '"centralServer" in inventory_hostname'
+
+- include_vars: office1server.yml
+  when: '"office1Server" in inventory_hostname'
+
+- include_vars: office2server.yml
+  when: '"office2Server" in inventory_hostname'
+
+# - name: Install traceroute
+#   yum: 
+#     name: traceroute
+#     state: present
+
+- name: Disable default route for eth0
+  lineinfile:
+      path: /etc/sysconfig/network-scripts/ifcfg-eth0
+      line: DEFROUTE=no
+  notify: restartnet
+
+
+- name: Add gateway
+  lineinfile:
+    path: /etc/sysconfig/network-scripts/ifcfg-{{ gateway.interface }}
+    regexp: ^GATEWAY
+    line: GATEWAY={{ gateway.ip }}
+  notify: restartnet
+
+# - name: Add route
+#   command: 'ip route add default via {{ gateway.ip }} dev {{ gateway.interface }}'
+#   ignore_errors: true
+
+- name: Reboot servers
+  reboot: 
+    msg: "Reboot initiated by Ansible"

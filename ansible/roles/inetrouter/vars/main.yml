@@ -1,0 +1,11 @@
+---
+sysctl_params:
+    net.ipv4.ip_forward: "1"
+
+routes_params:
+  inetrouter:
+    routes_file: route-eth1
+    network: 192.168.0.0/16
+    subnet: 192.168.255.2
+    net_interface: eth1
+    

@@ -131,6 +131,9 @@
 
     vagrant up
 
+В папке ansible
+
+    ansible-playbook playbook.yml
 
 Проверка    
 

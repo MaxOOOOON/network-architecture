@@ -90,10 +90,10 @@ Vagrant.configure("2") do |config|
           box.vm.network "private_network", ipconf
         end
               
-        config.vm.provision "ansible" do |ansible|    
-        # ansible.verbose = "v"
-        ansible.playbook = "ansible/playbook.yml" 
-        end
+        # config.vm.provision "ansible" do |ansible|    
+        # # ansible.verbose = "v"
+        # ansible.playbook = "ansible/playbook.yml" 
+        # end
 
       end
 

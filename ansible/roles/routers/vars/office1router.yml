@@ -1,10 +1,4 @@
 --- 
-  # office1Router:
-  #   routes_file: route-eth2
-  #   network: 192.168.2.0/24
-  #   via: 192.168.100.2
-  #   net_interface: eth2
-
 sysctl_params:
     net.ipv4.ip_forward: "1"
 

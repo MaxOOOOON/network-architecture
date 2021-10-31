@@ -8,10 +8,6 @@
 - include_vars: office2router.yml
   when: '"office2Router" in inventory_hostname'
 
-# - name: Install traceroute
-#   yum: 
-#     name: traceroute
-#     state: present
 
 - name: Set sysctl params
   sysctl:
@@ -42,10 +38,6 @@
     - "{{ routes_params.centralRouter.eth3 }}"
   when: 
     - '"centralRouter" in inventory_hostname'
-
-# - name: Routes  
-#   command:
-
 
 
 - name: Add gateway

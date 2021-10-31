@@ -8,10 +8,6 @@
 - include_vars: office2server.yml
   when: '"office2Server" in inventory_hostname'
 
-# - name: Install traceroute
-#   yum: 
-#     name: traceroute
-#     state: present
 
 - name: Disable default route for eth0
   lineinfile:

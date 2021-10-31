@@ -1,9 +1,4 @@
 ---
-# - name: Install traceroute
-#   yum: 
-#     name: traceroute
-#     state: present
-
 - name: Set sysctl params
   sysctl:
     name: "{{ item.key }}"
@@ -34,14 +29,6 @@
   notify: restartnet  
 
 
-# - name: configure static route
-#   community.general.nmcli:
-#       type: ethernet
-#       ifname: eth1
-#       conn_name: "System eth1"
-#       routing_rules4 : '192.168.0.0/16 192.168.255.2'
-#       state: present
-
 - name: iptables-save  
   shell: 'iptables-save > /etc/sysconfig/iptables'
 
@@ -49,6 +36,7 @@
 - name: Reboot servers
   reboot: 
     msg: "Reboot initiated by Ansible"
+
 
 - name: iptables-restore  
   shell: 'iptables-restore < /etc/sysconfig/iptables'

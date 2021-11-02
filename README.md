@@ -139,17 +139,18 @@
 
 Все сервера и роутеры должны ходить в инет через inetRouter     
 
-centralRouter   
-![]() 
-centralServer   
-![]() 
-office1Router   
-![]() 
-office1Server   
+### centralRouter   
+![](https://github.com/MaxOOOOON/network-architecture/blob/main/pictures/Screenshot_20211031_230714.png)    
+### centralServer   
+![](https://github.com/MaxOOOOON/network-architecture/blob/main/pictures/Screenshot_20211031_230808.png)    
+### office1Router   
+![](https://github.com/MaxOOOOON/network-architecture/blob/main/pictures/Screenshot_20211031_230737.png)    
+### office1Server       
+![](https://github.com/MaxOOOOON/network-architecture/blob/main/pictures/Screenshot_20211031_230750.png)    
 
 Все сервера должны видеть друг друга    
 
-centralServer   -->  office1Server  
-![]() 
-centralServer   -->  office2Server  
-![]() 
+### centralServer   -->  office1Server      
+![](https://github.com/MaxOOOOON/network-architecture/blob/main/pictures/Screenshot_20211031_231111.png)    
+### centralServer   -->  office2Server      
+![](https://github.com/MaxOOOOON/network-architecture/blob/main/pictures/Screenshot_20211031_231054.png)    
